@@ -10,7 +10,7 @@
 @property (nonatomic) CGFloat startX;//开始位置
 @property (nonatomic) CGFloat endX;//结束位置
 @property (nonatomic) CGFloat currentPointX;//当前位置
-@property (nonatomic) double oldValue;//前一个值
+@property (nonatomic) double lastValue;//前一个值
 
 @end
 
@@ -40,7 +40,7 @@
         _height =  frame.size.height;
 
         //初始值为0
-        _oldValue = 0;
+        _lastValue = 0;
         _value = 0;
         //当前位置
         self.currentPointX = self.startX;
@@ -75,8 +75,8 @@
 }
 
 // 修正值,采用四舍五入求，最小变化值的整数倍。
--(CGFloat) fixTick:(CGFloat) oldValue {
-    return ((NSInteger)round(oldValue / self.tick)) * self.tick;
+-(CGFloat) fixTick:(CGFloat) lastValue {
+    return ((NSInteger)round(lastValue / self.tick)) * self.tick;
 }
 
 //滑动位置，所对应的值，再最大值和最小值之间。
@@ -104,7 +104,7 @@
 
 -(void) setValue:(double) val {
     if (val <= self.maxSliderValue && val >= self.minSliderValue) {
-        _oldValue = _value;
+        _lastValue = _value;
         double fixval = ((NSInteger)round(val / self.tick)) * self.tick;
         if (fixval <= self.minSliderValue) {
             fixval = self.minSliderValue;
@@ -117,9 +117,9 @@
             newX = _startX;
         }
         self.currentPointX = newX;
-        if (_oldValue != val) {
+        if (_lastValue != val) {
             if ([self.delegate respondsToSelector:@selector(slider:valueChangedFrom:to:)]) {
-                [self.delegate slider: self valueChangedFrom:_oldValue to:_value];
+                [self.delegate slider: self valueChangedFrom:_lastValue to:_value];
             }
         }
         [self setNeedsDisplay];
