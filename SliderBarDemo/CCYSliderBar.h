@@ -1,6 +1,5 @@
 //
 //  SliderBar.h
-//  TradeNow
 
 #import <UIKit/UIKit.h>
 @class CCYSliderBar;
