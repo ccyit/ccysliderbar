@@ -192,68 +192,62 @@
 
 - (void)drawRect:(CGRect)rect {
     // Drawing code
+    // 设置背景色
     self.backgroundColor = [UIColor clearColor];
     _height = self.frame.size.height;
     _width = self.frame.size.width;
     _halfHeight = _height / 2.0;
-    
+    //获取上下文信息
     CGContextRef context = UIGraphicsGetCurrentContext();
     
+    //填充背景色
     CGContextSaveGState(context);
     [self.backgroundColor setFill];
     CGContextFillRect(context, self.frame);
     CGContextRestoreGState(context);
     
     CGContextSetLineWidth(context, self.barSize);
-//    CGContextSaveGState(context);
-//
-//    [self.barBorderColor setStroke];
-//    CGContextSetLineWidth(context, 0.5f);
-//    CGContextBeginPath(context);
-//    CGContextMoveToPoint(context, self.startX, _halfHeight - 1);
-//    CGContextAddLineToPoint(context, self.startX, _halfHeight + 1);
-//    CGContextAddLineToPoint(context, self.endX, _halfHeight + 1);
-//    CGContextAddLineToPoint(context, self.endX, _halfHeight - 1);
-//    CGContextAddLineToPoint(context, self.startX, _halfHeight - 1);
-//    CGContextStrokePath(context);
-//
-//    CGContextRestoreGState(context);
-    
+    //添加边框sliderbar边框
     CGContextSaveGState(context);
-    
+    [[UIColor clearColor] setStroke];
+    CGContextSetLineWidth(context, 1.5f);
+    CGContextBeginPath(context);
+    CGContextMoveToPoint(context, self.startX, _halfHeight - 1);
+    CGContextAddLineToPoint(context, self.startX, _halfHeight + 1);
+    CGContextAddLineToPoint(context, self.endX, _halfHeight + 1);
+    CGContextAddLineToPoint(context, self.endX, _halfHeight - 1);
+    CGContextAddLineToPoint(context, self.startX -1 , _halfHeight - 1);
+    CGContextStrokePath(context);
+    CGContextRestoreGState(context);
+    //画横线
+    CGContextSaveGState(context);
     [self.barEmptyColor setStroke];
     CGContextBeginPath(context);
     CGContextMoveToPoint(context, self.startX, _halfHeight);
     CGContextAddLineToPoint(context, self.endX, _halfHeight);
     CGContextStrokePath(context);
-    
     CGContextRestoreGState(context);
-    
+    //画左端的线
     CGContextSaveGState(context);
-    
     [self.barFillColor setStroke];
     CGContextBeginPath(context);
     CGContextMoveToPoint(context, self.startX, _halfHeight);
     CGContextAddLineToPoint(context, self.currentPointX, _halfHeight);
     CGContextStrokePath(context);
-    
     CGContextRestoreGState(context);
-    
+    //画一个大圆
     CGContextSaveGState(context);
-    
     [self.outerCycleColor setFill];
     CGContextFillEllipseInRect(context, CGRectMake(self.currentPointX - self.outerCycleRadius, _halfHeight - self.outerCycleRadius, self.outerCycleRadius * 2, self.outerCycleRadius * 2));
-    
     CGContextRestoreGState(context);
-    
+    //画一个小圆
     CGContextSaveGState(context);
-    
     [self.innerCycleColor setFill];
     CGContextFillEllipseInRect(context, CGRectMake(self.currentPointX - self.innerCycleRadius, _halfHeight - self.innerCycleRadius, self.innerCycleRadius * 2, self.innerCycleRadius * 2));
-    
     CGContextRestoreGState(context);
 }
 
+//点击屏幕
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
@@ -267,6 +261,7 @@
     }
 }
 
+//点击并滑动时间
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event  {
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
