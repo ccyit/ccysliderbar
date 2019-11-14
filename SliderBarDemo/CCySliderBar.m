@@ -2,20 +2,20 @@
 //  SliderBar.m
 
 
-#import "TNWSliderBar.h"
+#import "CCYSliderBar.h"
 #import "ChartConst.h"
 
-@interface TNWSliderBar()
+@interface CCYSliderBar()
 
-@property (nonatomic) CGFloat halfHeight;
-@property (nonatomic) CGFloat startX;
-@property (nonatomic) CGFloat endX;
-@property (nonatomic) CGPoint currentPoint;
-@property (nonatomic) double oldValue;
+@property (nonatomic) CGFloat halfHeight;//高度的一半
+@property (nonatomic) CGFloat startX;//开始位置
+@property (nonatomic) CGFloat endX;//结束位置
+@property (nonatomic) CGPoint currentPoint;//当前位置
+@property (nonatomic) double oldValue;//前一个值
 
 @end
 
-@implementation TNWSliderBar
+@implementation CCYSliderBar
 
 @synthesize maxSliderValue = _maxSliderValue;
 @synthesize minSliderValue = _minSliderValue;
@@ -37,26 +37,31 @@
 -(instancetype) initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self != nil) {
+        //设置背景色
         self.backgroundColor = [UIColor clearColor];
         _width = frame.size.width;
         _height =  frame.size.height;
+
+        //初始值为0
         _oldValue = 0;
         _value = 0;
-        self.currentPoint = CGPointMake(self.startX, self.currentPoint.y);
+        //当前位置
+        self.currentPoint = CGPointMake(self.startX, 0);
     }
     return self;
 }
 
 -(CGFloat) startX {
-    _startX = self.outerCycleRadius * 2 + 1;
+    _startX = self.outerCycleRadius * 2;
     return _startX;
 }
 
 -(CGFloat) endX {
-    _endX = _width - self.outerCycleRadius * 2 - 2;
+    _endX = _width - self.outerCycleRadius * 2;
     return _endX;
 }
 
+//size 必须大于等于1
 -(CGFloat) barSize {
     if (_barSize < 1) {
         _barSize = 1;
@@ -64,6 +69,7 @@
     return _barSize;
 }
 
+//tick 必须大于0
 -(double) tick {
     if (_tick <= 0) {
         _tick = 1;
@@ -71,23 +77,25 @@
     return _tick;
 }
 
+// 修正值,采用四舍五入求，最小变化值的整数倍。
 -(CGFloat) fixTick:(CGFloat) oldValue {
-    return ((NSInteger) (oldValue / self.tick)) * self.tick;
+    return ((NSInteger)round(oldValue / self.tick)) * self.tick;
 }
 
+//滑动位置，所对应的值，再最大值和最小值之间。
 -(CGFloat) calcValueFromPoint: (CGPoint) point {
     CGFloat x = point.x;
-    if (x < self.startX) {
+    if (x <= self.startX) {
         return self.minSliderValue;
     }
-    if (x > self.endX) {
+    if (x >= self.endX) {
         return self.maxSliderValue;
     }
     return [self fixTick:self.minSliderValue + ((x - self.startX) / (self.endX - self.startX)) * (self.maxSliderValue - self.minSliderValue)] ;
 }
 
 -(double) value {
-    //return [self calcValueFromPoint:_currentPoint];
+    //value 在最大值和最小值之间，不能超过此范围
     if (_value < self.minSliderValue) {
         _value = self.minSliderValue;
     }
@@ -100,19 +108,18 @@
 -(void) setValue:(double) val {
     if (val <= self.maxSliderValue && val >= self.minSliderValue) {
         _oldValue = _value;
-        double fixval = ((NSInteger)(val / self.tick)) * self.tick;
-        if (fixval < self.minSliderValue) {
+        double fixval = ((NSInteger)round(val / self.tick)) * self.tick;
+        if (fixval <= self.minSliderValue) {
             fixval = self.minSliderValue;
-        }
-        if (fixval > self.maxSliderValue) {
+        } else if (fixval >= self.maxSliderValue) {
             fixval = self.maxSliderValue;
         }
         _value = fixval;
         CGFloat newX = self.startX + ((_value - self.minSliderValue) / (self.maxSliderValue - self.minSliderValue)) * (self.endX - self.startX);
-        if (isnan(newX) || newX < _startX) {
+        if (isnan(newX) || newX <= _startX) {
             newX = _startX;
         }
-        self.currentPoint = CGPointMake(newX, self.currentPoint.y);
+        self.currentPoint = CGPointMake(newX, 0);
         if (_oldValue != val) {
             if ([self.delegate respondsToSelector:@selector(slider:valueChangedFrom:to:)]) {
                 [self.delegate slider: self valueChangedFrom:_oldValue to:_value];
@@ -138,20 +145,21 @@
 
 -(UIColor *) innerCycleColor {
     if (_innerCycleColor == nil) {
-        _innerCycleColor =  TNW_SLIDERBAR_INNERCYCLE_COLOR;
+        _innerCycleColor =  [UIColor greenColor];
     }
     return _innerCycleColor;
 }
 
 -(UIColor *) outerCycleColor {
     if (_outerCycleColor == nil) {
-        _outerCycleColor = TNW_SLIDERBAR_OUTERCYCLE_COLOR;
+        _outerCycleColor = [UIColor blueColor];
     }
     return _outerCycleColor;
 }
 
 -(UIColor *) sliderBackgroundColor {
     if(_sliderBackgroundColor == nil) {
+        // 透明色
         _sliderBackgroundColor = [UIColor clearColor];
     }
     return _sliderBackgroundColor;
@@ -159,35 +167,35 @@
 
 -(UIColor *) barBorderColor {
     if(_barBorderColor == nil) {
-        _barBorderColor = [UIColor blackColor];
+        _barBorderColor = [UIColor orangeColor];
     }
     return _barBorderColor;
 }
 
 -(UIColor *) barFillColor {
     if(_barFillColor == nil) {
-        _barFillColor = TNW_SLIDERBAR_INNERCYCLE_COLOR;
+        _barFillColor = [UIColor redColor];
     }
     return _barFillColor;
 }
 
 -(UIColor *) barEmptyColor {
     if(_barEmptyColor == nil) {
-        _barEmptyColor = [UIColor grayColor];
+        _barEmptyColor = [UIColor lightGrayColor];
     }
     return _barEmptyColor;
 }
 
 -(CGFloat) innerCycleRadius {
     if (_innerCycleRadius < 1.0) {
-        _innerCycleRadius = 5.0f;
+        _innerCycleRadius = 10.0f;
     }
     return _innerCycleRadius;
 }
 
 -(CGFloat) outerCycleRadius {
     if (_outerCycleRadius < 1.0) {
-        _outerCycleRadius = 9.0f;
+        _outerCycleRadius = 15.0f;
     }
     return _outerCycleRadius;
 }
@@ -270,7 +278,8 @@
     if ([self.delegate respondsToSelector:@selector(sliderBarTouchInsize:)]) {
         [self.delegate sliderBarTouchInsize:self];
     }
-    if (touchPoint.x >= self.startX && touchPoint.x <= self.endX) {
+    
+    if (touchPoint.x >= 0 && touchPoint.x <= self.width) {
         CGFloat newVal = [self calcValueFromPoint:touchPoint];
         [self setValue:newVal];
     }
@@ -282,7 +291,7 @@
     if ([self.delegate respondsToSelector:@selector(sliderBarTouchInsize:)]) {
         [self.delegate sliderBarTouchInsize:self];
     }
-    if (touchPoint.x >= self.startX && touchPoint.x <= self.endX) {
+    if (touchPoint.x >= 0 && self.width) {
         CGFloat newVal = [self calcValueFromPoint:touchPoint];
         [self setValue:newVal];
     }
