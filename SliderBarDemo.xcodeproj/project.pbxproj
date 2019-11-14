@@ -32,7 +32,6 @@
 		CE38FDA1237CF1ED00956592 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CE38FDA8237CF1F800956592 /* CCYSliderBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCYSliderBar.h; sourceTree = "<group>"; };
 		CE38FDA9237CF1F800956592 /* CCySliderBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCySliderBar.m; sourceTree = "<group>"; };
-		CE38FDAB237CF3C900956592 /* ChartConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChartConst.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +70,6 @@
 				CE38FD93237CF1D400956592 /* SceneDelegate.m */,
 				CE38FD95237CF1D400956592 /* ViewController.h */,
 				CE38FD96237CF1D400956592 /* ViewController.m */,
-				CE38FDAB237CF3C900956592 /* ChartConst.h */,
 				CE38FDA8237CF1F800956592 /* CCYSliderBar.h */,
 				CE38FDA9237CF1F800956592 /* CCySliderBar.m */,
 				CE38FD98237CF1D400956592 /* Main.storyboard */,

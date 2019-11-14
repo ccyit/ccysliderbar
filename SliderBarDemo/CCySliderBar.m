@@ -3,14 +3,13 @@
 
 
 #import "CCYSliderBar.h"
-#import "ChartConst.h"
 
 @interface CCYSliderBar()
 
 @property (nonatomic) CGFloat halfHeight;//高度的一半
 @property (nonatomic) CGFloat startX;//开始位置
 @property (nonatomic) CGFloat endX;//结束位置
-@property (nonatomic) CGPoint currentPoint;//当前位置
+@property (nonatomic) CGFloat currentPointX;//当前位置
 @property (nonatomic) double oldValue;//前一个值
 
 @end
@@ -28,8 +27,6 @@
 @synthesize barSize = _barSize;
 @synthesize width = _width;
 @synthesize height = _height;
-@synthesize sliderBackgroundColor = _sliderBackgroundColor;
-@synthesize barBorderColor = _barBorderColor;
 @synthesize barFillColor = _barFillColor;
 @synthesize barEmptyColor = _barEmptyColor;
 
@@ -46,7 +43,7 @@
         _oldValue = 0;
         _value = 0;
         //当前位置
-        self.currentPoint = CGPointMake(self.startX, 0);
+        self.currentPointX = self.startX;
     }
     return self;
 }
@@ -61,10 +58,10 @@
     return _endX;
 }
 
-//size 必须大于等于1
+//size 必须大于等于2
 -(CGFloat) barSize {
-    if (_barSize < 1) {
-        _barSize = 1;
+    if (_barSize < 2) {
+        _barSize = 2;
     }
     return _barSize;
 }
@@ -119,7 +116,7 @@
         if (isnan(newX) || newX <= _startX) {
             newX = _startX;
         }
-        self.currentPoint = CGPointMake(newX, 0);
+        self.currentPointX = newX;
         if (_oldValue != val) {
             if ([self.delegate respondsToSelector:@selector(slider:valueChangedFrom:to:)]) {
                 [self.delegate slider: self valueChangedFrom:_oldValue to:_value];
@@ -155,21 +152,6 @@
         _outerCycleColor = [UIColor blueColor];
     }
     return _outerCycleColor;
-}
-
--(UIColor *) sliderBackgroundColor {
-    if(_sliderBackgroundColor == nil) {
-        // 透明色
-        _sliderBackgroundColor = [UIColor clearColor];
-    }
-    return _sliderBackgroundColor;
-}
-
--(UIColor *) barBorderColor {
-    if(_barBorderColor == nil) {
-        _barBorderColor = [UIColor orangeColor];
-    }
-    return _barBorderColor;
 }
 
 -(UIColor *) barFillColor {
@@ -210,7 +192,7 @@
 
 - (void)drawRect:(CGRect)rect {
     // Drawing code
-    self.backgroundColor = self.sliderBackgroundColor;
+    self.backgroundColor = [UIColor clearColor];
     _height = self.frame.size.height;
     _width = self.frame.size.width;
     _halfHeight = _height / 2.0;
@@ -252,7 +234,7 @@
     [self.barFillColor setStroke];
     CGContextBeginPath(context);
     CGContextMoveToPoint(context, self.startX, _halfHeight);
-    CGContextAddLineToPoint(context, self.currentPoint.x, _halfHeight);
+    CGContextAddLineToPoint(context, self.currentPointX, _halfHeight);
     CGContextStrokePath(context);
     
     CGContextRestoreGState(context);
@@ -260,14 +242,14 @@
     CGContextSaveGState(context);
     
     [self.outerCycleColor setFill];
-    CGContextFillEllipseInRect(context, CGRectMake(self.currentPoint.x - self.outerCycleRadius, _halfHeight - self.outerCycleRadius, self.outerCycleRadius * 2, self.outerCycleRadius * 2));
+    CGContextFillEllipseInRect(context, CGRectMake(self.currentPointX - self.outerCycleRadius, _halfHeight - self.outerCycleRadius, self.outerCycleRadius * 2, self.outerCycleRadius * 2));
     
     CGContextRestoreGState(context);
     
     CGContextSaveGState(context);
     
     [self.innerCycleColor setFill];
-    CGContextFillEllipseInRect(context, CGRectMake(self.currentPoint.x - self.innerCycleRadius, _halfHeight - self.innerCycleRadius, self.innerCycleRadius * 2, self.innerCycleRadius * 2));
+    CGContextFillEllipseInRect(context, CGRectMake(self.currentPointX - self.innerCycleRadius, _halfHeight - self.innerCycleRadius, self.innerCycleRadius * 2, self.innerCycleRadius * 2));
     
     CGContextRestoreGState(context);
 }

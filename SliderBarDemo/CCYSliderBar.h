@@ -5,10 +5,9 @@
 #import <UIKit/UIKit.h>
 @class CCYSliderBar;
 @protocol CCYSliderBarDelegate <NSObject>
-@optional   //可选
+@optional   
 -(void) slider:(CCYSliderBar *)sliderBar valueChangedFrom:(CGFloat) oldValue to:(CGFloat) newValue;
 -(void) sliderBarTouchInsize:(CCYSliderBar *)sliderBar;
-@required   //必须
 
 @end
 
@@ -25,8 +24,6 @@
 @property (nonatomic) CGFloat outerCycleRadius;//外圆半径
 @property (nonatomic, strong) UIColor * innerCycleColor;//内圆颜色
 @property (nonatomic, strong) UIColor * outerCycleColor;//外圆颜色
-@property (nonatomic, strong) UIColor * sliderBackgroundColor;//背景颜色
-@property (nonatomic, strong) UIColor * barBorderColor;//border颜色
 @property (nonatomic, strong) UIColor * barFillColor;//填充颜色
 @property (nonatomic, strong) UIColor * barEmptyColor;//空值颜色
 @property (nonatomic, weak) id<CCYSliderBarDelegate> delegate;//代理对象

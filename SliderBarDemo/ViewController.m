@@ -33,11 +33,8 @@
     [super viewDidLoad];
     
     [self.view addSubview:self.priceSliderBar];
-    self.priceSliderBar.minSliderValue = 100;
-    self.priceSliderBar.maxSliderValue = 150;
-    self.priceSliderBar.tick = 0.2;
-    self.priceSliderBar.value = 50;
-    self.priceSliderBar.barSize = 3;
+    self.priceSliderBar.minSliderValue = 5000;
+    self.priceSliderBar.maxSliderValue = 8000;
 }
 
 
@@ -45,16 +42,9 @@
 #pragma mark -  CCYSliderBarDelegate
 
 -(void) sliderBarTouchInsize:(CCYSliderBar *)sliderBar {
-    NSLog(@"%f", sliderBar.value);
 }
 
 -(void) slider:(CCYSliderBar *)sliderBar valueChangedFrom:(CGFloat)oldValue to:(CGFloat)newValue {
-    NSLog(@"%f", oldValue);
-
-    NSLog(@"%f", newValue);
 }
-
-
-
 
 @end
